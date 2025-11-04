@@ -1,10 +1,43 @@
+{% load static %}
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <title>Blog</title>
+  <meta charset="utf-8" />
+  <title>Мій блог</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+    .thumb { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; background:#f3f4f6; }
+    .meta { color: #6b7280; font-size: 14px; margin: 8px 0 4px; }
+  </style>
 </head>
 <body>
-  Home page
+  <h1>Статті</h1>
+
+  {% if articles %}
+    <div class="grid">
+      {% for a in articles %}
+        <article class="card">
+          {% with img=a.images.all|first %}
+            {% if img %}
+              <img class="thumb" src="{{ img.image.url }}" alt="{{ img.title|default:a.title }}">
+            {% endif %}
+          {% endwith %}
+
+          <div class="meta">
+            {{ a.pub_date|date:"d.m.Y" }} · {{ a.category }}
+          </div>
+          <h3>{{ a.title }}</h3>
+          {% if a.description %}
+            <p>{{ a.description|truncatewords:24 }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Поки немає статей. Додай через адмінку і перезавантаж сторінку.</p>
+  {% endif %}
 </body>
 </html>
