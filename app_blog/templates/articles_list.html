@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category }} — {% endif %}Публікації{% endblock %}
+{% block content %}
+
+<section class="hero hero--sm">
+  <h1 class="hero__title">
+    {% if category %}{{ category }}{% else %}Усі публікації{% endif %}
+  </h1>
+  {% if category %}<p class="hero__subtitle">Відфільтровано за категорією</p>{% endif %}
+</section>
+
+<div class="grid">
+  {% for a in items %}
+    <article class="card">
+      {% if a.images.all %}
+        <a href="{{ a.get_absolute_url }}">
+          <img class="card__thumb" src="{{ a.images.all.0.image.url }}" alt="{{ a.title }}">
+        </a>
+      {% endif %}
+      <div class="card__body">
+        <div class="meta">
+          <span class="badge">{{ a.category|default:"Без категорії" }}</span>
+          <span class="muted">· {{ a.pub_date|date:"d.m.Y" }}</span>
+        </div>
+        <h3 class="card__title"><a href="{{ a.get_absolute_url }}">{{ a.title }}</a></h3>
+        {% if a.description %}
+          <p class="card__excerpt">{{ a.description|striptags|truncatewords:30 }}</p>
+        {% endif %}
+      </div>
+    </article>
+  {% empty %}
+    <p class="muted">Поки немає публікацій.</p>
+  {% endfor %}
+</div>
+
+{% if is_paginated %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a class="page" href="?page={{ page_obj.previous_page_number }}">← Попередня</a>
+    {% endif %}
+    <span class="page current">Стор. {{ page_obj.number }} із {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a class="page" href="?page={{ page_obj.next_page_number }}">Наступна →</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

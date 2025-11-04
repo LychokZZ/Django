@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Блог{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Шрифт (можна прибрати, якщо офлайн) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav__inner">
+      <a class="logo" href="/">Pop<span>Me</span> Blog</a>
+      <nav class="menu">
+        <a href="/">Головна</a>
+        <a href="{% url 'articles-list' %}">Публікації</a>
+        {% block extra_nav %}{% endblock %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>© {{ now|date:"Y" }} PopMe Blog</div>
+      <div class="muted">Зроблено на Django</div>
+    </div>
+  </footer>
+</body>
+</html>

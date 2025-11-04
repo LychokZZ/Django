@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} — Публікація{% endblock %}
+{% block content %}
+
+<nav class="crumbs">
+  <a href="/">Головна</a>
+  <span>/</span>
+  <a href="{% url 'articles-list' %}">Публікації</a>
+  {% if item.category %}<span>/</span><a href="{{ item.category.get_absolute_url }}">{{ item.category }}</a>{% endif %}
+</nav>
+
+<article class="article">
+  <h1 class="article__title">{{ item.title }}</h1>
+  <div class="meta mb-12">
+    {% if item.category %}<span class="badge">{{ item.category }}</span>{% endif %}
+    <span class="muted">· {{ item.pub_date|date:"d E Y" }}</span>
+  </div>
+
+  {% if images %}
+    <div class="gallery">
+      {% for img in images %}
+        <a href="{{ img.image.url }}" target="_blank" class="gallery__item">
+          <img src="{{ img.image.url }}" alt="{{ img.title|default:item.title }}">
+        </a>
+      {% endfor %}
+    </div>
+  {% elif item.images.all %}
+    <div class="hero-img">
+      <img src="{{ item.images.all.0.image.url }}" alt="{{ item.title }}">
+    </div>
+  {% endif %}
+
+  {% if item.description %}
+    <div class="article__content">
+      {{ item.description|safe }}
+    </div>
+  {% endif %}
+</article>
+
+{% endblock %}
